@@ -226,6 +226,24 @@
       margin-top: 12px;
     }
 
+    .qr-cards-panel { padding: 22px; border-bottom: 1px solid #e8eeea; }
+    .qr-cards-panel[hidden] { display: none; }
+    .qr-cards-panel h3 { margin: 0 0 8px; font-size: 19px; text-align: center; }
+    .qr-cards-panel > p { margin-bottom: 16px; color: #63736e; line-height: 1.7; text-align: center; }
+    .qr-cards-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    .qr-card {
+      display: grid;
+      justify-items: center;
+      gap: 8px;
+      padding: 14px;
+      border: 1px dashed #9aaba2;
+      border-radius: 12px;
+      text-align: center;
+      break-inside: avoid;
+    }
+    .qr-card strong { font-size: 17px; }
+    .qr-card canvas { width: 144px; height: 144px; max-width: 100%; }
+
     .log-list { display: grid; gap: 10px; margin: 0; padding: 16px; list-style: none; }
     .log-item {
       display: flex;
@@ -261,6 +279,25 @@
       .log-tools { width: 100%; }
       .utility-button { flex: 1; }
       .log-item { align-items: flex-start; flex-direction: column; gap: 8px; }
+      .qr-cards-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media print {
+      @page { margin: 10mm; }
+      body * { visibility: hidden; }
+      #qrCardsPanel, #qrCardsPanel * { visibility: visible; }
+      #qrCardsPanel, #qrCardsPanel[hidden] {
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: block !important;
+        width: 100%;
+        padding: 0;
+        border: 0;
+      }
+      .qr-cards-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6mm; }
+      .qr-card { border: 1px dashed #555; }
+      .qr-card-actions { display: none !important; }
     }
 
     @media (max-width: 380px) {
@@ -319,6 +356,7 @@
         <h2 id="logTitle">سجل فصل 7B3</h2>
         <div class="log-tools">
           <button class="utility-button" id="shareButton" type="button">رابط التطبيق</button>
+          <button class="utility-button" id="qrCardsButton" type="button">بطاقات QR</button>
           <button class="utility-button" id="exportButton" type="button" disabled>تنزيل CSV</button>
           <button class="utility-button danger" id="clearButton" type="button">مسح سجل هذا الجهاز</button>
         </div>
@@ -336,11 +374,21 @@
           <button class="utility-button" id="closeShareButton" type="button">إغلاق</button>
         </div>
       </section>
+      <section class="qr-cards-panel" id="qrCardsPanel" hidden aria-labelledby="qrCardsTitle">
+        <h3 id="qrCardsTitle">بطاقات QR للطلاب</h3>
+        <p>اطبع بطاقة لكل طالب. عند مسحها بكاميرا الجهاز المشترك، يُملأ رمزه تلقائيًا؛ بعدها يختار تسجيل الدخول أو الخروج.</p>
+        <div class="qr-cards-grid" id="qrCardsGrid"></div>
+        <div class="share-actions qr-card-actions">
+          <button class="utility-button" id="printQrCardsButton" type="button">طباعة البطاقات</button>
+          <button class="utility-button" id="closeQrCardsButton" type="button">إغلاق</button>
+        </div>
+      </section>
       <ul class="log-list" id="logList" aria-live="polite"></ul>
     </section>
     <p class="footnote">تُحفظ السجلات على هذا الجهاز والمتصفح فقط. استخدموا جهازًا واحدًا مشتركًا إذا أردتم سجل حضور واحدًا؛ الأجهزة الأخرى لها سجلات منفصلة.</p>
   </main>
 
+  <script src="qrcode-generator.js"></script>
   <script>
     "use strict";
 
@@ -376,6 +424,8 @@
     const exportButton = document.getElementById("exportButton");
     const sharePanel = document.getElementById("sharePanel");
     const shareUrlInput = document.getElementById("shareUrl");
+    const qrCardsPanel = document.getElementById("qrCardsPanel");
+    const qrCardsGrid = document.getElementById("qrCardsGrid");
     let currentEntries = [];
 
     function showStatus(message, kind) {
@@ -448,7 +498,8 @@
           throw new Error("يوجد سجل حضور غير صالح. لم يتم تغيير البيانات.");
         }
         const code = typeof entry.id === "string" ? normalizeCode(entry.id) : "";
-        const name = typeof entry.name === "string" ? entry.name : students[code];
+        const legacyName = Object.prototype.hasOwnProperty.call(students, code) ? students[code] : "";
+        const name = typeof entry.name === "string" ? entry.name : legacyName;
         if (!name || (entry.action !== "دخول" && entry.action !== "خروج") ||
             typeof entry.time !== "string" || !entry.time) {
           throw new Error("يوجد سجل حضور غير مكتمل. لم يتم تغيير البيانات.");
@@ -641,6 +692,73 @@
       sharePanel.hidden = false;
     }
 
+    function renderQr(canvas, url) {
+      const qr = qrcode(0, "M");
+      qr.addData(url);
+      qr.make();
+      const moduleCount = qr.getModuleCount();
+      const scale = 4;
+      const margin = 4;
+      const size = (moduleCount + margin * 2) * scale;
+      const context = canvas.getContext("2d");
+      canvas.width = size;
+      canvas.height = size;
+      context.fillStyle = "#ffffff";
+      context.fillRect(0, 0, size, size);
+      context.fillStyle = "#000000";
+      for (let row = 0; row < moduleCount; row += 1) {
+        for (let column = 0; column < moduleCount; column += 1) {
+          if (qr.isDark(row, column)) {
+            context.fillRect((column + margin) * scale, (row + margin) * scale, scale, scale);
+          }
+        }
+      }
+    }
+
+    function showQrCards() {
+      const appUrl = getAppUrl();
+      if (!appUrl) {
+        showStatus("افتح التطبيق من رابط الإنترنت أولًا لإنشاء بطاقات QR.", "info");
+        return;
+      }
+      if (typeof qrcode !== "function") {
+        showStatus("تعذر تحميل منشئ QR المحلي.", "error");
+        return;
+      }
+
+      qrCardsGrid.replaceChildren();
+      for (const [code, name] of Object.entries(students)) {
+        const card = document.createElement("article");
+        card.className = "qr-card";
+        const studentName = document.createElement("strong");
+        studentName.textContent = name;
+        const canvas = document.createElement("canvas");
+        canvas.setAttribute("role", "img");
+        canvas.setAttribute("aria-label", "QR للطالب " + name);
+        const studentUrl = new URL(appUrl);
+        studentUrl.searchParams.set("student", code);
+        renderQr(canvas, studentUrl.toString());
+        card.append(studentName, canvas);
+        qrCardsGrid.appendChild(card);
+      }
+      qrCardsPanel.hidden = false;
+    }
+
+    function prefillFromQr() {
+      const params = new URLSearchParams(window.location.search);
+      if (!params.has("student")) return;
+      const code = normalizeCode(params.get("student") || "");
+      const name = Object.prototype.hasOwnProperty.call(students, code) ? students[code] : "";
+      if (!name) {
+        showStatus("رمز QR غير صحيح أو غير مسجل في فصل 7B3.", "error");
+        return;
+      }
+      studentInput.value = code;
+      showStatus("تم التعرف على " + name + ". اختر تسجيل الدخول أو الخروج.", "info");
+      window.history.replaceState(null, "", window.location.pathname);
+      studentInput.focus();
+    }
+
     async function copyAppUrl() {
       const appUrl = getAppUrl();
       if (!appUrl) {
@@ -691,6 +809,11 @@
       }
     });
     document.getElementById("shareButton").addEventListener("click", openSharePanel);
+    document.getElementById("qrCardsButton").addEventListener("click", showQrCards);
+    document.getElementById("printQrCardsButton").addEventListener("click", () => window.print());
+    document.getElementById("closeQrCardsButton").addEventListener("click", () => {
+      qrCardsPanel.hidden = true;
+    });
     document.getElementById("copyLinkButton").addEventListener("click", copyAppUrl);
     document.getElementById("sendLinkButton").addEventListener("click", sendAppUrl);
     document.getElementById("closeShareButton").addEventListener("click", () => {
@@ -698,6 +821,7 @@
     });
 
     loadAttendanceData();
+    prefillFromQr();
   </script>
 </body>
 </html>
