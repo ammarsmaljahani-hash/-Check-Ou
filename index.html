@@ -395,7 +395,7 @@
     const storageKey = "attendanceLog_7B3";
     const students = {
       "1500": "عمار الجهني",
-      "1501": "عمار اللباني",
+      "1501": "عمار العتيبي",
       "1502": "فارس الغامدي",
       "1503": "خالد الغامدي",
       "1504": "نواف جابر",
@@ -499,7 +499,8 @@
         }
         const code = typeof entry.id === "string" ? normalizeCode(entry.id) : "";
         const legacyName = Object.prototype.hasOwnProperty.call(students, code) ? students[code] : "";
-        const name = typeof entry.name === "string" ? entry.name : legacyName;
+        const storedName = typeof entry.name === "string" ? entry.name : legacyName;
+        const name = storedName === "عمار اللباني" ? "عمار العتيبي" : storedName;
         if (!name || (entry.action !== "دخول" && entry.action !== "خروج") ||
             typeof entry.time !== "string" || !entry.time) {
           throw new Error("يوجد سجل حضور غير مكتمل. لم يتم تغيير البيانات.");
