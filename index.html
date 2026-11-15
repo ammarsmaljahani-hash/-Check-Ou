@@ -401,7 +401,7 @@
       "1504": "نواف جابر",
       "1505": "يوسف تركستاني",
       "1506": "دانييل الغامدي",
-      "1507": "يوسف الغامدي",
+      "1507": "يوسف العبيدي",
       "1508": "وهيب تميم",
       "1509": "يزن مازن",
       "1510": "ريان",
@@ -415,6 +415,10 @@
       "1518": "سليمان",
       "1519": "مشعل",
       "1520": "يزن عبدالله"
+    };
+    const correctedNames = {
+      "عمار اللباني": "عمار العتيبي",
+      "يوسف الغامدي": "يوسف العبيدي"
     };
     const studentInput = document.getElementById("studentId");
     const statusMessage = document.getElementById("statusMessage");
@@ -500,7 +504,7 @@
         const code = typeof entry.id === "string" ? normalizeCode(entry.id) : "";
         const legacyName = Object.prototype.hasOwnProperty.call(students, code) ? students[code] : "";
         const storedName = typeof entry.name === "string" ? entry.name : legacyName;
-        const name = storedName === "عمار اللباني" ? "عمار العتيبي" : storedName;
+        const name = correctedNames[storedName] || storedName;
         if (!name || (entry.action !== "دخول" && entry.action !== "خروج") ||
             typeof entry.time !== "string" || !entry.time) {
           throw new Error("يوجد سجل حضور غير مكتمل. لم يتم تغيير البيانات.");
