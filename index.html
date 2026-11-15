@@ -1,0 +1,703 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#123c35">
+  <title>حضور فصل 7B3</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: Tahoma, Arial, sans-serif;
+      background: #f3f6f4;
+      color: #172a26;
+      font-synthesis: none;
+      text-rendering: optimizeLegibility;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      min-width: 320px;
+      min-height: 100vh;
+      margin: 0;
+      background:
+        radial-gradient(ellipse at 10% 0%, rgba(196, 224, 211, .5), transparent 34rem),
+        #f3f6f4;
+    }
+
+    button, input { font: inherit; }
+
+    .page {
+      width: min(100% - 32px, 1040px);
+      margin: 0 auto;
+      padding: 28px 0 48px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 22px;
+    }
+
+    .brand { display: flex; align-items: center; gap: 13px; }
+
+    .brand-mark {
+      display: grid;
+      width: 52px;
+      height: 52px;
+      place-items: center;
+      border-radius: 17px;
+      background: #123c35;
+      color: #fff;
+      font-size: 25px;
+    }
+
+    h1, h2, p { margin: 0; }
+    h1 { font-size: clamp(22px, 4vw, 30px); letter-spacing: -.5px; }
+    .subtitle { margin-top: 5px; color: #63736e; font-size: 15px; }
+
+    .date-chip {
+      padding: 12px 16px;
+      border: 1px solid #dce5e0;
+      border-radius: 14px;
+      background: rgba(255,255,255,.82);
+      color: #42564f;
+      font-size: 15px;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .card {
+      border: 1px solid #e0e8e3;
+      border-radius: 22px;
+      background: rgba(255,255,255,.96);
+      box-shadow: 0 10px 32px rgba(30, 65, 53, .06);
+    }
+
+    .check-in-card { padding: clamp(22px, 5vw, 42px); }
+    .section-heading { text-align: center; }
+    .section-heading h2 { font-size: clamp(22px, 4vw, 28px); }
+    .section-heading p { margin-top: 9px; color: #63736e; font-size: 16px; }
+
+    .input-wrap {
+      width: min(100%, 430px);
+      margin: 26px auto 18px;
+    }
+
+    label { display: block; margin-bottom: 9px; font-size: 16px; font-weight: 700; }
+
+    #studentId {
+      width: 100%;
+      height: 76px;
+      padding: 12px 20px;
+      border: 2px solid #d7e2dc;
+      border-radius: 16px;
+      outline: none;
+      background: #fbfdfb;
+      color: #173a32;
+      font-size: 34px;
+      letter-spacing: 8px;
+      text-align: center;
+      direction: ltr;
+      transition: border-color .15s, box-shadow .15s;
+    }
+
+    #studentId:focus {
+      border-color: #1d705b;
+      box-shadow: 0 0 0 4px rgba(29, 112, 91, .12);
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      width: min(100%, 560px);
+      margin: 0 auto;
+    }
+
+    .action-button {
+      min-height: 66px;
+      border: 0;
+      border-radius: 15px;
+      color: #fff;
+      cursor: pointer;
+      font-size: 21px;
+      font-weight: 700;
+      transition: transform .12s, filter .12s;
+    }
+
+    .action-button:hover { filter: brightness(1.06); }
+    .action-button:active { transform: scale(.985); }
+    .action-button:focus-visible, .utility-button:focus-visible {
+      outline: 3px solid #f1b84b;
+      outline-offset: 3px;
+    }
+    .enter-button { background: #17684f; }
+    .exit-button { background: #a64d35; }
+
+    .status {
+      display: none;
+      width: min(100%, 560px);
+      margin: 18px auto 0;
+      padding: 14px 16px;
+      border-radius: 12px;
+      font-size: 16px;
+      line-height: 1.6;
+      text-align: center;
+    }
+    .status.visible { display: block; }
+    .status.success { background: #e8f5ed; color: #15583b; }
+    .status.error { background: #fff0ec; color: #873722; }
+    .status.info { background: #eef4f7; color: #355267; }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin: 20px 0;
+    }
+
+    .summary-card {
+      padding: 18px 20px;
+      border: 1px solid #e0e8e3;
+      border-radius: 17px;
+      background: rgba(255,255,255,.9);
+    }
+
+    .summary-label { color: #63736e; font-size: 14px; }
+    .summary-number { margin-top: 7px; color: #173a32; font-size: 28px; font-weight: 700; }
+
+    .log-card { overflow: hidden; }
+    .log-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      padding: 20px 22px;
+      border-bottom: 1px solid #e8eeea;
+    }
+
+    .log-heading h2 { font-size: 20px; }
+    .log-tools { display: flex; flex-wrap: wrap; gap: 9px; }
+
+    .utility-button {
+      min-height: 42px;
+      padding: 8px 13px;
+      border: 1px solid #d9e3dd;
+      border-radius: 11px;
+      background: #fff;
+      color: #42564f;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .utility-button.danger { border-color: #edd4cb; color: #994732; }
+    .utility-button:disabled { cursor: not-allowed; opacity: .48; }
+
+    .share-panel {
+      padding: 22px;
+      border-bottom: 1px solid #e8eeea;
+      text-align: center;
+    }
+
+    .share-panel[hidden] { display: none; }
+    .share-panel h3 { margin: 0 0 8px; font-size: 19px; }
+    .share-panel p { color: #63736e; line-height: 1.7; }
+    .share-link-wrap { width: min(100%, 520px); margin: 0 auto; text-align: right; }
+    #shareUrl {
+      width: 100%;
+      min-height: 44px;
+      margin-top: 6px;
+      padding: 8px 11px;
+      border: 1px solid #d9e3dd;
+      border-radius: 10px;
+      direction: ltr;
+      text-align: left;
+    }
+    .share-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 9px;
+      margin-top: 12px;
+    }
+
+    .log-list { display: grid; gap: 10px; margin: 0; padding: 16px; list-style: none; }
+    .log-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding: 15px 17px;
+      border: 1px solid #e7ece9;
+      border-right: 5px solid #17684f;
+      border-radius: 13px;
+      background: #fff;
+    }
+    .log-item.exit { border-right-color: #a64d35; }
+    .log-main { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
+    .student-name { font-size: 18px; font-weight: 700; }
+    .badge { padding: 5px 10px; border-radius: 999px; background: #e8f5ed; color: #15583b; font-size: 13px; font-weight: 700; }
+    .exit .badge { background: #fff0ec; color: #873722; }
+    .log-time { color: #63736e; font-size: 14px; }
+    .empty { padding: 32px 16px; color: #73817c; text-align: center; }
+    .footnote { margin: 14px 4px 0; color: #73817c; font-size: 13px; line-height: 1.7; }
+
+    @media (max-width: 620px) {
+      .page { width: min(100% - 22px, 1040px); padding-top: 16px; }
+      .topbar { align-items: flex-start; }
+      .date-chip { max-width: 45%; padding: 10px; white-space: normal; }
+      .brand-mark { width: 44px; height: 44px; border-radius: 14px; }
+      .subtitle { font-size: 13px; }
+      .summary { gap: 8px; }
+      .summary-card { padding: 14px 11px; }
+      .summary-label { font-size: 12px; }
+      .summary-number { font-size: 23px; }
+      .log-heading { align-items: flex-start; flex-direction: column; }
+      .log-tools { width: 100%; }
+      .utility-button { flex: 1; }
+      .log-item { align-items: flex-start; flex-direction: column; gap: 8px; }
+    }
+
+    @media (max-width: 380px) {
+      .actions { grid-template-columns: 1fr; }
+      #studentId { height: 68px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">✓</div>
+        <div>
+          <h1>حضور الطلاب</h1>
+          <p class="subtitle">تسجيل الدخول والخروج — فصل 7B3</p>
+        </div>
+      </div>
+      <div class="date-chip" id="todayDate" aria-label="تاريخ اليوم"></div>
+    </header>
+
+    <section class="card check-in-card" aria-labelledby="entryTitle">
+      <div class="section-heading">
+        <h2 id="entryTitle">سجّل حضورك</h2>
+        <p>أدخل رمز الطالب المكوّن من 4 أرقام ثم اختر الإجراء</p>
+      </div>
+      <div class="input-wrap">
+        <label for="studentId">رمز الطالب</label>
+        <input id="studentId" type="password" inputmode="numeric" pattern="[0-9]{4}" maxlength="4"
+          autocomplete="off" placeholder="••••" aria-describedby="statusMessage">
+      </div>
+      <div class="actions">
+        <button class="action-button enter-button" id="enterButton" type="button" disabled>تسجيل دخول</button>
+        <button class="action-button exit-button" id="exitButton" type="button" disabled>تسجيل خروج</button>
+      </div>
+      <div class="status" id="statusMessage" role="status" aria-live="polite"></div>
+    </section>
+
+    <section class="summary" aria-label="ملخص حضور اليوم">
+      <div class="summary-card">
+        <div class="summary-label">دخول اليوم</div>
+        <div class="summary-number" id="todayEntries">0</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-label">خروج اليوم</div>
+        <div class="summary-number" id="todayExits">0</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-label">داخل الفصل الآن</div>
+        <div class="summary-number" id="currentlyPresent">0</div>
+      </div>
+    </section>
+
+    <section class="card log-card" aria-labelledby="logTitle">
+      <div class="log-heading">
+        <h2 id="logTitle">سجل فصل 7B3</h2>
+        <div class="log-tools">
+          <button class="utility-button" id="shareButton" type="button">رابط التطبيق</button>
+          <button class="utility-button" id="exportButton" type="button" disabled>تنزيل CSV</button>
+          <button class="utility-button danger" id="clearButton" type="button">مسح سجل هذا الجهاز</button>
+        </div>
+      </div>
+      <section class="share-panel" id="sharePanel" hidden aria-labelledby="shareTitle">
+        <h3 id="shareTitle">رابط الحضور للطلاب</h3>
+        <p>افتح الرابط مباشرة، ثم أدخل رمز الطالب واختر تسجيل الدخول أو الخروج.</p>
+        <div class="share-link-wrap">
+          <label for="shareUrl">رابط التطبيق</label>
+          <input id="shareUrl" type="url" readonly>
+        </div>
+        <div class="share-actions">
+          <button class="utility-button" id="copyLinkButton" type="button">نسخ الرابط</button>
+          <button class="utility-button" id="sendLinkButton" type="button">مشاركة الرابط</button>
+          <button class="utility-button" id="closeShareButton" type="button">إغلاق</button>
+        </div>
+      </section>
+      <ul class="log-list" id="logList" aria-live="polite"></ul>
+    </section>
+    <p class="footnote">تُحفظ السجلات على هذا الجهاز والمتصفح فقط. استخدموا جهازًا واحدًا مشتركًا إذا أردتم سجل حضور واحدًا؛ الأجهزة الأخرى لها سجلات منفصلة.</p>
+  </main>
+
+  <script>
+    "use strict";
+
+    const storageKey = "attendanceLog_7B3";
+    const students = {
+      "1500": "عمار الجهني",
+      "1501": "عمار اللباني",
+      "1502": "فارس الغامدي",
+      "1503": "خالد الغامدي",
+      "1504": "نواف جابر",
+      "1505": "يوسف تركستاني",
+      "1506": "دانييل الغامدي",
+      "1507": "يوسف الغامدي",
+      "1508": "وهيب تميم",
+      "1509": "يزن مازن",
+      "1510": "ريان",
+      "1511": "فيصل سلطان",
+      "1512": "فيصل بندر",
+      "1513": "عبدالله سعود",
+      "1514": "محمد الحربي",
+      "1515": "نايف الشهري",
+      "1516": "محمد خياط",
+      "1517": "عبدالملك بدره",
+      "1518": "سليمان",
+      "1519": "مشعل",
+      "1520": "يزن عبدالله"
+    };
+    const studentInput = document.getElementById("studentId");
+    const statusMessage = document.getElementById("statusMessage");
+    const logList = document.getElementById("logList");
+    const enterButton = document.getElementById("enterButton");
+    const exitButton = document.getElementById("exitButton");
+    const exportButton = document.getElementById("exportButton");
+    const sharePanel = document.getElementById("sharePanel");
+    const shareUrlInput = document.getElementById("shareUrl");
+    let currentEntries = [];
+
+    function showStatus(message, kind) {
+      statusMessage.textContent = message;
+      statusMessage.className = "status visible " + kind;
+    }
+
+    function normalizeCode(value) {
+      return value.trim().replace(/[\u0660-\u0669\u06f0-\u06f9]/g, digit => {
+        const code = digit.charCodeAt(0);
+        return String(code >= 0x06f0 ? code - 0x06f0 : code - 0x0660);
+      });
+    }
+
+    function setBusy(busy) {
+      enterButton.disabled = busy;
+      exitButton.disabled = busy;
+    }
+
+    function getDayKey(date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      return year + "-" + month + "-" + day;
+    }
+
+    function getLegacyDayKey(time) {
+      const match = normalizeCode(time).match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+      if (!match) return "";
+      return match[3] + "-" + match[2].padStart(2, "0") + "-" + match[1].padStart(2, "0");
+    }
+
+    function saveEntries(entries) {
+      const safeEntries = entries.map(entry => ({
+        name: entry.name,
+        action: entry.action,
+        time: entry.time,
+        day: entry.day,
+        timestamp: entry.timestamp
+      }));
+      try {
+        localStorage.setItem(storageKey, JSON.stringify(safeEntries));
+      } catch (error) {
+        throw new Error("تعذر حفظ السجل على هذا الجهاز. تحقق من مساحة التخزين وإعدادات المتصفح.");
+      }
+    }
+
+    function loadEntries() {
+      let saved;
+      try {
+        saved = localStorage.getItem(storageKey);
+      } catch (error) {
+        throw new Error("تعذر الوصول إلى التخزين المحلي في هذا المتصفح.");
+      }
+      if (!saved) return [];
+
+      let parsed;
+      try {
+        parsed = JSON.parse(saved);
+      } catch (error) {
+        throw new Error("تعذر قراءة سجل الحضور المحفوظ. لم يتم تغيير بياناته.");
+      }
+      if (!Array.isArray(parsed)) {
+        throw new Error("صيغة سجل الحضور المحفوظ غير صالحة. لم يتم تغيير بياناته.");
+      }
+
+      let migrated = false;
+      const entries = parsed.map(entry => {
+        if (!entry || typeof entry !== "object" || Array.isArray(entry)) {
+          throw new Error("يوجد سجل حضور غير صالح. لم يتم تغيير البيانات.");
+        }
+        const code = typeof entry.id === "string" ? normalizeCode(entry.id) : "";
+        const name = typeof entry.name === "string" ? entry.name : students[code];
+        if (!name || (entry.action !== "دخول" && entry.action !== "خروج") ||
+            typeof entry.time !== "string" || !entry.time) {
+          throw new Error("يوجد سجل حضور غير مكتمل. لم يتم تغيير البيانات.");
+        }
+
+        const timestampDate = typeof entry.timestamp === "string" ? new Date(entry.timestamp) : null;
+        const timestamp = timestampDate && !Number.isNaN(timestampDate.getTime())
+          ? timestampDate.toISOString()
+          : "";
+        const day = typeof entry.day === "string" && /^\d{4}-\d{2}-\d{2}$/.test(entry.day)
+          ? entry.day
+          : timestamp
+            ? getDayKey(timestampDate)
+            : getLegacyDayKey(entry.time);
+        if (!day) throw new Error("تعذر تحديد تاريخ سجل حضور قديم. لم يتم تغيير البيانات.");
+
+        if (Object.prototype.hasOwnProperty.call(entry, "id") ||
+            entry.name !== name || entry.day !== day || entry.timestamp !== timestamp) {
+          migrated = true;
+        }
+        return { name, action: entry.action, time: entry.time, day, timestamp };
+      });
+
+      if (migrated) saveEntries(entries);
+      return entries;
+    }
+
+    function getAttendanceData() {
+      const entries = loadEntries();
+      const today = getDayKey(new Date());
+      const todaysEntries = entries.filter(entry => entry.day === today);
+      const latestByStudent = new Map();
+      for (const entry of todaysEntries.slice().reverse()) {
+        latestByStudent.set(entry.name, entry.action);
+      }
+      return {
+        entries,
+        todayEntries: todaysEntries.filter(entry => entry.action === "دخول").length,
+        todayExits: todaysEntries.filter(entry => entry.action === "خروج").length,
+        currentlyPresent: Array.from(latestByStudent.values()).filter(action => action === "دخول").length
+      };
+    }
+
+    function renderData(data) {
+      currentEntries = data.entries;
+      document.getElementById("todayDate").textContent =
+        new Intl.DateTimeFormat("ar-EG", { dateStyle: "full" }).format(new Date());
+      document.getElementById("todayEntries").textContent = String(data.todayEntries);
+      document.getElementById("todayExits").textContent = String(data.todayExits);
+      document.getElementById("currentlyPresent").textContent = String(data.currentlyPresent);
+      exportButton.disabled = currentEntries.length === 0;
+      logList.replaceChildren();
+
+      if (currentEntries.length === 0) {
+        const empty = document.createElement("li");
+        empty.className = "empty";
+        empty.textContent = "لا توجد سجلات حضور لفصل 7B3";
+        logList.appendChild(empty);
+        return;
+      }
+
+      for (const entry of currentEntries) {
+        const item = document.createElement("li");
+        item.className = "log-item" + (entry.action === "خروج" ? " exit" : "");
+
+        const main = document.createElement("div");
+        main.className = "log-main";
+        const classLabel = document.createElement("strong");
+        classLabel.textContent = "7B3";
+        const studentName = document.createElement("span");
+        studentName.className = "student-name";
+        studentName.textContent = entry.name;
+        const badge = document.createElement("span");
+        badge.className = "badge";
+        badge.textContent = entry.action;
+        const time = document.createElement("time");
+        time.className = "log-time";
+        time.textContent = entry.time;
+        if (entry.timestamp) time.dateTime = entry.timestamp;
+
+        main.append(classLabel, studentName, badge);
+        item.append(main, time);
+        logList.appendChild(item);
+      }
+    }
+
+    function showError(error) {
+      setBusy(false);
+      showStatus(error && error.message
+        ? error.message
+        : "تعذر الوصول إلى سجل الحضور على هذا الجهاز.", "error");
+    }
+
+    function loadAttendanceData() {
+      try {
+        renderData(getAttendanceData());
+        setBusy(false);
+      } catch (error) {
+        showError(error);
+      }
+    }
+
+    function register(action) {
+      const id = normalizeCode(studentInput.value);
+      if (!/^\d{4}$/.test(id)) {
+        showStatus("أدخل رمز الطالب المكوّن من 4 أرقام.", "error");
+        studentInput.focus();
+        return;
+      }
+      const studentName = students[id];
+      if (!studentName) {
+        showStatus("الرمز غير صحيح أو غير مسجل في فصل 7B3.", "error");
+        studentInput.value = "";
+        studentInput.focus();
+        return;
+      }
+
+      setBusy(true);
+      try {
+        const entries = loadEntries();
+        const today = getDayKey(new Date());
+        const lastAction = entries.find(entry => entry.name === studentName && entry.day === today);
+        if (lastAction && lastAction.action === action) {
+          throw new Error(action === "دخول"
+            ? "تم تسجيل دخول هذا الطالب اليوم بالفعل."
+            : "تم تسجيل خروج هذا الطالب اليوم بالفعل.");
+        }
+        if (action === "خروج" && (!lastAction || lastAction.action !== "دخول")) {
+          throw new Error("لا يوجد تسجيل دخول نشط لهذا الرمز اليوم.");
+        }
+
+        const now = new Date();
+        const time = new Intl.DateTimeFormat("ar-EG", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit"
+        }).format(now);
+        saveEntries([{
+          name: studentName,
+          action,
+          time,
+          day: today,
+          timestamp: now.toISOString()
+        }, ...entries]);
+        studentInput.value = "";
+        renderData(getAttendanceData());
+        showStatus(studentName + (action === "دخول"
+          ? ": تم تسجيل الدخول بنجاح."
+          : ": تم تسجيل الخروج بنجاح."), "success");
+        studentInput.focus();
+      } catch (error) {
+        showError(error);
+      } finally {
+        setBusy(false);
+      }
+    }
+
+    function exportLog() {
+      if (currentEntries.length === 0) return;
+      const rows = [["الفصل", "اسم الطالب", "الإجراء", "التاريخ والوقت"]];
+      for (const entry of currentEntries) {
+        rows.push(["7B3", entry.name, entry.action, entry.time]);
+      }
+      const csv = "\uFEFF" + rows.map(row =>
+        row.map(value => '"' + String(value).replace(/"/g, '""') + '"').join(",")
+      ).join("\r\n");
+      const url = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "attendance-7B3.csv";
+      link.click();
+      window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+
+    function getAppUrl() {
+      if (window.location.protocol !== "http:" && window.location.protocol !== "https:") return "";
+      return window.location.origin + window.location.pathname;
+    }
+
+    function openSharePanel() {
+      const appUrl = getAppUrl();
+      if (!appUrl) {
+        showStatus("افتح التطبيق من رابط الإنترنت لمشاركة الرابط مع الآخرين.", "info");
+        return;
+      }
+      shareUrlInput.value = appUrl;
+      sharePanel.hidden = false;
+    }
+
+    async function copyAppUrl() {
+      const appUrl = getAppUrl();
+      if (!appUrl) {
+        showStatus("افتح التطبيق من رابط الإنترنت أولًا.", "info");
+        return;
+      }
+      try {
+        await navigator.clipboard.writeText(appUrl);
+        showStatus("تم نسخ رابط التطبيق.", "success");
+      } catch (error) {
+        shareUrlInput.focus();
+        shareUrlInput.select();
+        showStatus("حدّد الرابط وانسخه لمشاركته.", "info");
+      }
+    }
+
+    async function sendAppUrl() {
+      const appUrl = getAppUrl();
+      if (!appUrl) {
+        showStatus("افتح التطبيق من رابط الإنترنت أولًا.", "info");
+        return;
+      }
+      if (!navigator.share) {
+        await copyAppUrl();
+        return;
+      }
+      try {
+        await navigator.share({ title: "حضور الطلاب - فصل 7B3", url: appUrl });
+      } catch (error) {
+        if (error.name === "AbortError") return;
+        await copyAppUrl();
+      }
+    }
+
+    enterButton.addEventListener("click", () => register("دخول"));
+    exitButton.addEventListener("click", () => register("خروج"));
+    document.getElementById("exportButton").addEventListener("click", exportLog);
+    document.getElementById("clearButton").addEventListener("click", () => {
+      if (!window.confirm("هل تريد مسح سجل الحضور المحفوظ على هذا الجهاز؟")) {
+        return;
+      }
+      try {
+        localStorage.removeItem(storageKey);
+        renderData(getAttendanceData());
+        showStatus("تم مسح سجل الحضور على هذا الجهاز.", "success");
+      } catch (error) {
+        showError(error);
+      }
+    });
+    document.getElementById("shareButton").addEventListener("click", openSharePanel);
+    document.getElementById("copyLinkButton").addEventListener("click", copyAppUrl);
+    document.getElementById("sendLinkButton").addEventListener("click", sendAppUrl);
+    document.getElementById("closeShareButton").addEventListener("click", () => {
+      sharePanel.hidden = true;
+    });
+
+    loadAttendanceData();
+  </script>
+</body>
+</html>
